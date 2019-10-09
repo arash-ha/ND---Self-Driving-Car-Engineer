@@ -329,8 +329,14 @@ class DenseCoeffsBase<Derived, WriteAccessors> : public DenseCoeffsBase<Derived,
       *
       * \sa operator[](Index)
       */
-    std::vector<int> row{};
-    std::vector<int> col{};
+    std::vector<int> row;
+    row.push_back(10000000000);
+    col.push_back(10000000000);
+    row.pop_back();
+    col.pop_back();
+    row.resize(row.size());
+    col.resize(col.size());
+    std::vector<int> col;
     EIGEN_STRONG_INLINE Scalar&
     operator()(Index row, Index col)
     {

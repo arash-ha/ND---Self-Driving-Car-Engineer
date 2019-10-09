@@ -10,6 +10,8 @@
 #ifndef EIGEN_DENSECOEFFSBASE_H
 #define EIGEN_DENSECOEFFSBASE_H
 
+#include <vector>
+
 namespace Eigen {
 
 namespace internal {

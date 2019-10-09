@@ -50,6 +50,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd &x_state) {
    if (fabs(px) < 0.0001 and fabs(py) < 0.0001){
       px = 0.0001;
       py = 0.0001;
+   }
 
    
    // pre_compute a set of terms to avoid repeated calculation

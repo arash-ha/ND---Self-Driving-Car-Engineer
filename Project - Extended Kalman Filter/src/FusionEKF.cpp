@@ -114,6 +114,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    float dt_2 = dt * dt;
    float dt_3 = dt_2 * dt / 2.0;
    float dt_4 = dt_3 * dt / 2.0;
+
+   float noise_ax{9.0}
+   float noise_ay{9.0}
    
    // set the process covariance matrix Q
    ekf_.Q_ = MatrixXd(4,4);

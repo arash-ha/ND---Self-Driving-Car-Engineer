@@ -80,9 +80,9 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     if (measurement_pack.sensor_type_ == MeasurementPackage::RADAR) {
       // TODO: Convert radar from polar to cartesian coordinates 
       //         and initialize state.
-      float rho     = measurement_pack.raw_measurement_[0];
-      float phi     = measurement_pack.raw_measurement_[1];
-      float rho_dot = measurement_pack.raw_measurement_[2];
+      float rho     = measurement_pack.raw_measurements_[0];
+      float phi     = measurement_pack.raw_measurements_[1];
+      float rho_dot = measurement_pack.raw_measurements_[2];
 
       cout << "rho: " << rho << endl;
       cout << "phi: " << phi << endl;
@@ -147,7 +147,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    
    // set the process covariance matrix Q
    ekf_.Q_ = MatrixXd(4,4);
-   ekd_.Q_ << dt_4 * noise_ax, 0, dt_3 * noise_ax, 0,
+   ekf_.Q_ << dt_4 * noise_ax, 0, dt_3 * noise_ax, 0,
               0, dt_4 * noise_ay, 0, dt_3 * noise_ay,
               dt_3 * noise_ax, 0, dt_2 * noise_ax, 0,
               0, dt_3 * noise_ay, 0, dt_2 * noise_ay;            
@@ -169,7 +169,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     try {
         ekf_.R_ = R_radar_;
         ekf_.H_ = tools.CalculateJacobian(ekf_.x_);
-        ekf_.UpdateEKF(measurement_pack.raw_measurement_);
+        ekf_.UpdateEKF(measurement_pack.raw_measurements_);
     } catch (...) {
         return;
     }
@@ -178,7 +178,7 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
     // TODO: Laser updates
     ekf_.R_ = R_laser_;
     ekf_.H_ = H_laser_;
-    ekf_.Update(measurement_pack.raw_measurement_);
+    ekf_.Update(measurement_pack.raw_measurements_);
   }
 
   // print the output

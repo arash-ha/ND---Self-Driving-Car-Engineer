@@ -62,6 +62,7 @@ MatrixXd Tools::CalculateJacobian(const VectorXd &x_state) {
        //std::cout << "CalculateJacobian () - Error - Division by zero" << std::endl;
        c1 = 0.0000001;
        //return Hj;
+   }
 
    
    float c4 = vx * py - vy * px;

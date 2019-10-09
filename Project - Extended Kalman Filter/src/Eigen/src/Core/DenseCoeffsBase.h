@@ -333,6 +333,8 @@ class DenseCoeffsBase<Derived, WriteAccessors> : public DenseCoeffsBase<Derived,
       */
     std::vector<int> row{};
     std::vector<int> col{};
+    row.push_back();
+    col.push_back();
 
     EIGEN_STRONG_INLINE Scalar&
     operator()(Index row, Index col)

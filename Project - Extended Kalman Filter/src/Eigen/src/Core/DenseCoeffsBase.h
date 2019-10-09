@@ -329,7 +329,8 @@ class DenseCoeffsBase<Derived, WriteAccessors> : public DenseCoeffsBase<Derived,
       *
       * \sa operator[](Index)
       */
-
+    int rox{};
+    int col{};
     EIGEN_STRONG_INLINE Scalar&
     operator()(Index row, Index col)
     {

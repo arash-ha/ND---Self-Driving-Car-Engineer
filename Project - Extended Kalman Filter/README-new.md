@@ -23,8 +23,8 @@ Udacity term 2 simulation executable, and so cannot be run standalone.
 However, here's some example output.  
 
 [//]: # (Image References) 
-![Result of first dataset]:(./Result/Capture_dataset1.JPG)
-![Result of second dataset]:(./Result/Capture_dataset2.JPG)
+![Result of first dataset](./Result/Capture_dataset1.JPG)
+![Result of second dataset](./Result/Capture_dataset2.JPG)
 
 Red circles are lidar measurements.
 

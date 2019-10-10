@@ -22,7 +22,9 @@ The code presented here is designed to work with the
 Udacity term 2 simulation executable, and so cannot be run standalone.
 However, here's some example output.  
 
-![Tracking car with EKF][ekf_tracking]
+[//]: # (Image References) 
+[Capture_dataset1.JPG]: ./Result/Capture_dataset1.JPG
+[Capture_dataset2.JPG]: ./Result/Capture_dataset2.JPG
 
 Red circles are lidar measurements.
 

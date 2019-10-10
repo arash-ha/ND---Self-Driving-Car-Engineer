@@ -5,8 +5,8 @@ In this project, a kalman filter has been used to estimate the state of a moving
 
 
 [//]: # (Image References) 
-[Capture_dataset1.JPG]: ./Result/Capture_dataset1.JPG
-[Capture_dataset2.JPG]: ./Result/Capture_dataset2.JPG
+[Result of first dataset]: ./Result/Capture_dataset1.JPG
+[Result of second dataset]: ./Result/Capture_dataset2.JPG
 
 
 This project implements an extended Kalman filter in C++. 
@@ -23,8 +23,8 @@ Udacity term 2 simulation executable, and so cannot be run standalone.
 However, here's some example output.  
 
 [//]: # (Image References) 
-[Capture_dataset1.JPG]: ./Result/Capture_dataset1.JPG
-[Capture_dataset2.JPG]: ./Result/Capture_dataset2.JPG
+![Result of first dataset]:(./Result/Capture_dataset1.JPG)
+![Result of second dataset]:(./Result/Capture_dataset2.JPG)
 
 Red circles are lidar measurements.
 

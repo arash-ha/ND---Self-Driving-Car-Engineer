@@ -133,8 +133,11 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
    previous_timestamp_ = measurement_pack.timestamp_;
    
    // update the state transition matrix F according to the new elapsed time
-   ekf_.F_(0,2) = dt;
-   ekf_.F_(1,3) = dt;
+   ekf_.F_ = MatrixXd(4, 4);
+   ekf_.F_ << 1,  0,  dt, 0,
+             0,  1,  0,  dt,
+             0,  0,  1,  0,
+             0,  0,  0,  1;
    
    float dt_2 = dt * dt;
    float dt_3 = dt_2 * dt / 2.0;

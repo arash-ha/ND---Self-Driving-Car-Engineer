@@ -41,7 +41,7 @@ void ParticleFilter::init(double x, double y, double theta, double std[]) {
   // Normal distributions
   normal_distribution<double> dist_x(x, std_x);
   normal_distribution<double> dist_y(y, std_y);
-  normal_distribution<double> dist_theta(theta, std_thata);
+  normal_distribution<double> dist_theta(theta, std_theta);
   
   // Generation of particles with normal distribution with mean on GPS values
   for (int i = 0; i < num_particles; i++) {
@@ -77,9 +77,9 @@ void ParticleFilter::prediction(double delta_t, double std_pos[],
         particles[i].y += velocity * delta_t * sin(particles[i].theta);
       }
       else {
-        particles[i].x += (velocity/yawrate) * (sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].thata));
-        particles[i].y += (velocity/yawrate) * (cos(particles[i].theta) - cos(particles[i].thata + yaw_rate * delta_t));
-        particles[i].theta += yaw_rate * delta_t
+        particles[i].x += (velocity/yaw_rate) * (sin(particles[i].theta + yaw_rate * delta_t) - sin(particles[i].theta));
+        particles[i].y += (velocity/yaw_rate) * (cos(particles[i].theta) - cos(particles[i].theta + yaw_rate * delta_t));
+        particles[i].theta += yaw_rate * delta_t;
         }
       // Noise
       particles[i].x += dist_x(gen);
@@ -117,7 +117,7 @@ void ParticleFilter::dataAssociation(vector<LandmarkObs> predicted,
        // find the predicted landmark nearest current observed landmark
        if (current_dist < min_dist) {
          min_dist = current_dist;
-         map_id = p.id;
+         map_id = pred.id;
        }
      }
       // set the observation's id to the nearest predicted landmark's id
@@ -155,7 +155,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       // obtain coordinates
       float landmark_x = map_landmarks.landmark_list[j].x_f;
       float landmark_y = map_landmarks.landmark_list[j].y_f;
-      int landmark_id = map_landmarks.landmark_list[j].id_f;
+      int landmark_id = map_landmarks.landmark_list[j].id_i;
       
       // considering landmark within sensor range of the particle
       // consider rectangular region around particle over circular region (dist)
@@ -172,7 +172,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     vector<LandmarkObs> transformed_os;
     for (unsigned int j = 0; j < observations.size(); j++) {
       double t_x = cos(particle_theta) * observations[j].x - sin(particle_theta) * observations[j].y + particle_x;
-      double t_x = sin(particle_theta) * observations[j].x + cos(particle_theta) * observations[j].y + particle_y;
+      double t_y = sin(particle_theta) * observations[j].x + cos(particle_theta) * observations[j].y + particle_y;
       transformed_os.push_back(LandmarkObs{observations[j].id, t_x, t_y});
     }
     
@@ -180,15 +180,15 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     dataAssociation(predictions, transformed_os);
     
     // reinitilize weight
-    particles[i].wight = 1.0;
+    particles[i].weight = 1.0;
     
-    for (unsignedint j = 0; j < transformed_os.size; j++) {
+    for (unsigned int j = 0; j < transformed_os.size; j++) {
       
       // placeholders for observation and associated prediction coordinates
-      double obs_x, obs_y, pred_x, pred_y
+      double obs_x, obs_y, pred_x, pred_y;
       obs_x = transformed_os[j].x;
       obs_y = transformed_os[j].y;
-      int associated_pred = transformation_os[j].id;
+      int associated_pred = transformed_os[j].id;
       
       // x,y corrdinates of the prediction associated with the current observation
       for (unsigned int m = 0; m < predictions.size(); m++) {
@@ -201,10 +201,10 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
       // calculate weight for the observation with multirate Gaussian
       double std_x = std_landmark[0];
       double std_y = std_landmark[1];
-      double w_Obs = (1/(2*M_PI*std_x*std_y))*exp(-(pow(pred_x-obs_x,2)/(2*pow(std_x,2))+(pow(pred_x-obs_x,2)/(2*pow(std_y,2)) )));
+      double w_Obs = (1/(2*M_PI*std_x*std_y))*exp(-(pow(pred_x-obs_x,2)/(2*pow(std_x,2))+(pow(pred_y-obs_y,2)/(2*pow(std_y,2)) )));
       
       // product new observation weight with total observations weight
-      particles[i].wight *= w_Obs;
+      particles[i].weight *= w_Obs;
     }
   }
 }
@@ -230,16 +230,16 @@ void ParticleFilter::resample() {
   double max_weight = *max_element(weights.begin(), weights.end());
   
   // uniform random distribution [0.0, max_weight)
-  uniform_real_distribution<double> uniintdist(0, max_weight);
+  uniform_real_distribution<double> unirealdist(0, max_weight);
   
   double beta = 0.0;
   
   // spin the resample wheel
   for (int i = 0; i < num_particles; i++) {
-    beta += unirealdist(gent) * 2.0;
+    beta += unirealdist(gen) * 2.0;
     while (beta > weights[index]) {
       beta -= weights[index];
-      index = (index + 1) % nume_particles;
+      index = (index + 1) % num_particles;
     }
     new_particles.push_back(particles[index]);
   }

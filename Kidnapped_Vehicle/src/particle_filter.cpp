@@ -182,7 +182,7 @@ void ParticleFilter::updateWeights(double sensor_range, double std_landmark[],
     // reinitilize weight
     particles[i].weight = 1.0;
     
-    for (unsigned int j = 0; j < transformed_os.size; j++) {
+    for (unsigned int j = 0; j < transformed_os.size(); j++) {
       
       // placeholders for observation and associated prediction coordinates
       double obs_x, obs_y, pred_x, pred_y;

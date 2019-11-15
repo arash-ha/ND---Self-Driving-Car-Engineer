@@ -284,7 +284,7 @@ Test Accuracy = 0.33
 ![alt text][image10]
 
 
-It seems that the model only predictr Bumpy road and Slippery road correctly. The reason could be clearaatiy of these sign compared to others.
+It seems that the model only predict Bumpy road and Slippery road correctly. The reason could be clarity of these sign compared to others.
 Some steps can be taken in order to increase the performance:
 1. more training on shadowed or obstructed signs
 2. working on batchAugment function
@@ -292,5 +292,5 @@ Some steps can be taken in order to increase the performance:
 ### Conclusion
 Overall, the model performed rather well in initial testing, but faltered on images taken from the web. The reason is that the images from the web are cmpletely different from the supplied training set. Further refinement, augmentation and perhaps simply more, varied data could help the model generalise and deal with the challenge better.
 
-Implementing models from other successful papers can be employed to gain a better intuition of the design choices when building a model. I notify that the LeNet model was initially built for low-res classification of the MNIST dataset, a considerably simpler and less varied challenge.
+Implementing models from other successful papers can be employed to gain a better intuition of the design choices when building a model. I notify that the LeNet model was initially built for low-resolution classification of the MNIST dataset, a considerably simpler and less varied challenge.
 

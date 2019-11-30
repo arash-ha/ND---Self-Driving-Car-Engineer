@@ -54,7 +54,7 @@ struct StepObject{
 };
 
 class Vehicle {
-Public:
+public:
     struct TrajectoryObject {
         vector<Vehicle> trajectory;
         vector<double> a_list;
@@ -162,7 +162,7 @@ double cancel_previous_cost(int cancel_count){
 }
 
 double prepare_without_change_cost(bool plcl_lcr, bool plcr_lcr){
-    if pwc = 0;
+    int pwc = 0;
     if (plcl_lcr){
         pwc++;
     }
@@ -221,7 +221,7 @@ double buffer_cost(vector<double> lowest_time_list){
     return cost;
 }
 
-double change_lane_cost(int total_lane_change){
+double change_lane_cost(int total_lane_changes){
     double cost = comfort*total_lane_changes;
     return cost;
 }
@@ -479,7 +479,7 @@ void Vehicle::restore_vehicle(Vehicle snapshot){
     this->lane_changing = snapshot.lane_change_finish;
     this->lane_change_finish = snapshot.lane_change_finish;
     this->plcl_lcl = snapshot.plcl_lcl;
-    this->plcr_lcr = snapshot.plcr.lcr;
+    this->plcr_lcr = snapshot.plcr_lcr;
 }
 
 Vehicle Vehicle::copy_vehicle(){
@@ -555,9 +555,9 @@ StepObject Vehicle::acc_for_d(vector<vector<double>> predictions){
         if ((ocar_d >= d_small) && (ocar_d <= d_big)){
             double s_dif = ocar_s - car_s;
             
-            if (s_dif >= 0.0 && s_dif < min_s_dif) {
+            if (s_dif >= 0.0 && s_dif < min_s_diff) {
                 //in_front.push_back(ocar);
-                min_s_dif = s_dif;
+                min_s_diff = s_dif;
                 min_s = ocar_s;
                 min_v = ocar_v;
                 min_id = (int)ocar[0];
@@ -590,7 +590,7 @@ StepObject Vehicle::acc_for_d(vector<vector<double>> predictions){
     double seperation_next = next_pos - my_next;
     double available_room = seperation_next - this->preferred_buffer;
     max_acc = min(max_acc, available_room);
-    max_acc = max(max_acc - amax);
+    max_acc = max(max_acc - a_max);
     }
     so.a = max_acc;
     so.lowest_time = lowest_time;

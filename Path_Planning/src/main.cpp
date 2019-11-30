@@ -1,7 +1,7 @@
 #include <uWS/uWS.h>
 #include <fstream>
 #include <iostream>
-#include <math>
+#include <math.h>
 #include <chrono>
 #include <thread>
 #include <string>

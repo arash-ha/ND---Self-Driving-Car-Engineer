@@ -54,7 +54,7 @@ struct StepObject{
 };
 
 class Vehicle {
-    
+Public:
     struct TrajectoryObject {
         vector<Vehicle> trajectory;
         vector<double> a_list;
@@ -69,7 +69,7 @@ class Vehicle {
         string stage;
         vector<string> state_list;
         double cost;
-    }
+    };
     
     double preferred_buffer = 13.0;
     int prep_lane;
@@ -144,7 +144,7 @@ vector<vector<double>> filter_predictions_by_d_range(vector<vector<double>> pred
 }
 
 vector<vector<double>> filter_predictions_by_d(vector<vector<double>> predictions, double d){
-    return filtered_predictions_by_d_range(predictions, d - car_wid, d + car_wid);
+    return filter_predictions_by_d_range(predictions, d - car_wid, d + car_wid);
 }
 
 double time_to_collision(double ocar_s, double car_s, double ocar_v, double car_v){
@@ -222,7 +222,7 @@ double buffer_cost(vector<double> lowest_time_list){
 }
 
 double change_lane_cost(int total_lane_change){
-    double cost = comfort*total_lane_chanegs;
+    double cost = comfort*total_lane_changes;
     return cost;
 }
 
@@ -241,7 +241,7 @@ double at_lane_cost(vector<Vehicle> trajectory){
 
 double calculate_cost(Vehicle& vehicle, Vehicle::TrajectoryObject to){
     double cost = 0.0;
-    cost += inefficieny_cost(to.v_sum, to.step_count, vehicle.target_speed);
+    cost += inefficiency_cost(to.v_sum, to.step_count, vehicle.target_speed);
     cost += near_cost(to.closest_approach_list);
     cost += occupied_cost(to.lowest_time_front_list);
     cost += buffer_cost(to.lowest_time_list);
@@ -279,7 +279,7 @@ Vehicle::Vehicle(int lane, double s, double v, double a, double target_speed){
     this-> a = a;
     this-> state = "CS";
     this-> step = 0;
-    this-> target_spped = target_speed;
+    this-> target_speed = target_speed;
     this-> time = 0.0;
     this-> lane_changing = false;
     this-> lane_change_finish = false;
@@ -726,7 +726,7 @@ vector<double> getFrenet(double x, double y, double theta, vector<double> maps_x
 }
 
 
-vector<double> getXY(doubles, double d, vector<double>maps_s, vector<double>maps_x, vector<double>maps_y){
+vector<double> getXY(double, double d, vector<double>maps_s, vector<double>maps_x, vector<double>maps_y){
     int prev_wp = -1;
     while(s>maps_s[prev_wp+1]&&(prev_wp<(int)(maps_s.size()-1))){
         prev_wp++;

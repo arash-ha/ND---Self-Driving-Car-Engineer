@@ -13,7 +13,7 @@
 #include "spline.h"
 
 // for convenience
-using nlohmann::json;
+using json = nlohmann::json;
 using std::string;
 using std::vector;
 using namespace std;
@@ -115,7 +115,7 @@ vector<vector<double>> filter_predictions_by_s(vector<vector<double>> prediction
         double ocar_s = ocar[1];
         double ocar_v = ocar[3];
         ocar_s += ocar_v * t;
-        if (fabs(ocar[i] - s) <= range){
+        if (fabs(ocar[1] - s) <= range){
             filtered.push_back(ocar);
         }
     }
@@ -268,7 +268,7 @@ double get_d(int lane){
     }
     return lane_width*(0.5+(double)lane);
 }
-
+// Vehicle initialization
 Vehicle::Vehicle(int lane, double s, double v, double a, double target_speed){
     this-> target_lane = lane;
     this-> current_lane = lane;
@@ -291,13 +291,18 @@ Vehicle::~Vehicle(){}
 
 vector<string> Vehicle::get_available_states(){
     vector<string> available_states;
+    // previous lane change still continues
     if (this-> lane_changing){
+        // accept new state 
         available_states.push_back("KL");
+        // turn back to previous state (lane) if not already passed to the target_lane
         if (fabs(this-> d - this-> target_d) > 2.5){
             available_states.push_back("CC");
         }
     }
+    // no lane change is taking place now
     else{
+        // prevent lane change from 2 (current_lane) to 0 (target_lane)
         bool not_in_leftmost = this->target_lane > 0;
         bool not_in_rightmost = this->target_lane < lane_size - 1;
         bool left_available = (!(this-> target_lane < this-> current_lane));
@@ -352,7 +357,7 @@ Vehicle::TrajectoryObject Vehicle::get_next_state_recursive(vector<vector<double
     double vi = this->v;
     double si = this->s;
     double di = this->d;
-    double df = this->target_d;
+    doubl// p// p// prevent lane change from 2 (current_lane) to 0 (target_lane)revent lane change from 2 (current_lane) to 0 (target_lane)revent lane change from 2 (current_lane) to 0 (target_lane)e df = this->target_d;
     // 0. find d and target_d d_dif
     double dd = df - di;
     double dd_abs = fabs(dd)
@@ -371,7 +376,7 @@ Vehicle::TrajectoryObject Vehicle::get_next_state_recursive(vector<vector<double
     // 3. get available states
     Vehicle snapshot = this->copy_vehicle();
     vector<string> availale_states = this->get_available_states();
-    vector<Vehicle::Trajectory> to list;
+    vector<Vehicle::TrajectoryObject> to list;
     
     vector<double> costs;
     for (auto st:available_states){
@@ -399,7 +404,11 @@ Vehicle::TrajectoryObject Vehicle::get_next_state_recursive(vector<vector<double
         double sf = si + ds;
         double lowest_time = desired_buffer;
         double closest_approach = car_len;
-        while (this-> < sf){
+        while (this->s < sf){
+            // during iteration, construct the helper_data, calculated nearest, lowest_time, and lowest_time_front and others
+            // filters should be used, not all ocars should be considered, filter by s, filter by ...., filter by d,
+            // it is assumed that ocars wont change d!!! this assumption may be used. with notification.
+          
             StepObject so = this->acc_for_d(filtered_s_d_range);
             this->a = so.a;
             if (so.lowest_time < lowest_time){
@@ -476,7 +485,7 @@ void Vehicle::restore_vehicle(Vehicle snapshot){
     this->current_lane = snapshot.current_lane;
     this->prep_lane = snapshot.prep_lane;
     this->time = snapshot.time;
-    this->lane_changing = snapshot.lane_change_finish;
+    this->lane_changing = snapshot.lane_changing;
     this->lane_change_finish = snapshot.lane_change_finish;
     this->plcl_lcl = snapshot.plcl_lcl;
     this->plcr_lcr = snapshot.plcr_lcr;
@@ -498,29 +507,38 @@ Vehicle Vehicle::copy_vehicle(){
 
 void Vehicle::realize_state(vector<vector<double>> predictions){
     string state = this->state;
+    /*
+    Given a state, realize it by adjusting acceleration and lane.
+    Note - lane changes happen instantaneously.
+    */
     if(state.compare("CC") == 0){
         if (this->target_d < this->d){
             realize_lane_change("R");
         }
-        else if (state.compare("LCL") == 0){
-            this->plcl_lcl = false;
+        else if (this->target_d > this->d){
+            
             realize_lane_change("L");
         }
     }
-        else if (state.compare("LCR") == 0){
-            this->plcr_lcr = false;
-            realize_lane_change("R");
+    else if(state.compare("LCL") == 0)
+    {
+        this->plcl_lcl = false;
+        realize_lane_change("L");
+    }
+    else if (state.compare("LCR") == 0){
+        this->plcr_lcr = false;
+        realize_lane_change("R");
         }
-        else if (state.compare("PLCL") == 0){
-            this->plcl_lcl = true;
-            realize_prep_lane_change("L");
+    else if (state.compare("PLCL") == 0){
+        this->plcl_lcl = true;
+        realize_prep_lane_change("L");
         }
-        else if (state.compare("PLCR") == 0){
-            this->plcr_lcr = true;
-            realize_prep_lane_change("R");
+    else if (state.compare("PLCR") == 0){
+        this->plcr_lcr = true;
+        realize_prep_lane_change("R");
         }
 }
-
+// combined to return acc, buffer_cost (lowest,time), near_cost (closest_approach)
 StepObject Vehicle::acc_for_d(vector<vector<double>> predictions){
     StepObject so;
     double delta_v_til_target = this->target_speed - this->v;
@@ -562,35 +580,38 @@ StepObject Vehicle::acc_for_d(vector<vector<double>> predictions){
                 min_v = ocar_v;
                 min_id = (int)ocar[0];
             }
-        if (fabs(ocar_d - car_d) <= car_wid){
-            double dist_abs = fabs(ocar_s - car_s);
-            double time_to = desired_buffer;
-            if(dist_abs <= car_len) {
-                time_to = 0.0;
-            }
-            else if (ocar_s > car_s){
-                time_to = time_to_collision(ocar_s, car_s + car_len, ocar_v, car_v);
-            }
-            else {
-                time_to = time_to_collision(ocar_s + car_len, car_s, ocar_v, car_v);
-            }
-            if (time_to >= 0.0){
-                if(time_to < lowest_time){
-                    lowest_time = time_to;
+            if (fabs(ocar_d - car_d) <= car_wid){
+                double dist_abs = fabs(ocar_s - car_s);
+                double time_to = desired_buffer;
+                if(dist_abs <= car_len) {
+                    time_to = 0.0;
                 }
-            }
-            if (dist_abs < closest_approach){
-                closest_approach = dist_abs;
+                else if (ocar_s > car_s){
+                    time_to = time_to_collision(ocar_s, car_s + car_len, ocar_v, car_v);
+                }
+                else {
+                    time_to = time_to_collision(ocar_s + car_len, car_s, ocar_v, car_v);
+                }
+                // buffer lowest_time
+                if (time_to >= 0.0){
+                    if(time_to < lowest_time){
+                        lowest_time = time_to;
+                    }
+                }
+                if (dist_abs < closest_approach){
+                    closest_approach = dist_abs;
+                }
             }
         }
     }
+    // If there is a leading vehicle
     if (min_s_diff < 100.0){
-    double next_pos = min_s + (min_v * tp_init);
-    double my_next = car_s + (car_v * tp_init);
-    double seperation_next = next_pos - my_next;
-    double available_room = seperation_next - this->preferred_buffer;
-    max_acc = min(max_acc, available_room);
-    max_acc = max(max_acc - a_max);
+        double next_pos = min_s + (min_v * tp_init);
+        double my_next = car_s + (car_v * tp_init);
+        double seperation_next = next_pos - my_next;
+        double available_room = seperation_next - this->preferred_buffer;
+        max_acc = min(max_acc, available_room);
+        max_acc = max(max_acc - a_max);
     }
     so.a = max_acc;
     so.lowest_time = lowest_time;
@@ -712,7 +733,7 @@ vector<double> getFrenet(double x, double y, double theta, vector<double> maps_x
     double center_x = 1000-maps_x[prev_wp];
     double center_y = 2000-maps_y[prev_wp];
     double centerToPos = distance(center_x,center_y,x_x,x_y);
-   double centerToRef = distance(center_x,center_y,proj_x,proj_y);
+    double centerToRef = distance(center_x,center_y,proj_x,proj_y);
     double frenet_d = distance(x_x,x_y,proj_x,proj_y);
     if (centerToPos <= centerToRef){
         frenet_d *= -1;
@@ -949,6 +970,7 @@ int main() {
           }
           // Convert to the cars coordinates
           for (int i = 0; i < ptsx.size(); i++){
+              //shift car reference angle to 0 degrees
               double shift_x = ptsx[i] - ref_x;
               double shift_y = ptsy[i] - ref_y;
               
@@ -980,11 +1002,11 @@ int main() {
           
            for (int i = 1; i <= planning_steps - pre_size; i++) {
               vehicle.update_current_a(t_init * i);
-              if (vehicle.a > amax) {
-                vehicle.a = amax;
+              if (vehicle.a > a_max) {
+                vehicle.a = a_max;
               }
-              else if (vehicle.a < - amax) {
-                vehicle.a = -amax;
+              else if (vehicle.a < - a_max) {
+                vehicle.a = -a_max;
               }
 
               if (vehicle.target_speed - vehicle.v < 0.0) {
@@ -1042,7 +1064,7 @@ int main() {
     if (req.getUrl().valueLength == 1) {
       res->end(s.data(), s.length());
     } else {
-      // i guess this should be done more gracefully?
+
       res->end(nullptr, 0);
     }
   });

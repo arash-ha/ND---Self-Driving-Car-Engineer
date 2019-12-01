@@ -489,7 +489,7 @@ Vehicle Vehicle::copy_vehicle(){
     snapshot.current_lane = this->current_lane;
     snapshot.prep_lane = this->prep_lane;
     snapshot.time = this->time;
-    snapshot.lane_changing = this->lane-changing;
+    snapshot.lane_changing = this->lane_changing;
     snapshot.lane_change_finish = this->lane_change_finish;
     snapshot.plcl_lcl = this->plcl_lcl;
     snapshot.plcr_lcr = this->plcr_lcr;

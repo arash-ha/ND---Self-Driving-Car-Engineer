@@ -21,7 +21,7 @@ A really helpful resource for doing this project and creating smooth trajectorie
 
 The car is able to drive without any accident for at least 4.32 miles. Below is the image of the simulator running for several minutes.
 
-![image1] (images/simulator_screenshot.jpg)
+[simulator_screenshot] (images/simulator_screenshot.jpg)
 
 According to the rules of this project, no speed limit red message was seen and jerk at the beginning of the running was controlled for not exceeding the maximum. In addition, the car stays on the lane and change the lane smoothly just in case of front car is slow. 
 

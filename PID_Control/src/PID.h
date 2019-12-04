@@ -2,7 +2,7 @@
 #define PID_H
 
 class PID {
- public:
+public:
   /**
    * Constructor
    */
@@ -17,7 +17,7 @@ class PID {
    * Initialize PID.
    * @param (Kp_, Ki_, Kd_) The initial PID coefficients
    */
-  void Init(double Kp_, double Ki_, double Kd_);
+  void Init(double Kp, double Ki, double Kd);
 
   /**
    * Update the PID error variables given cross track error.

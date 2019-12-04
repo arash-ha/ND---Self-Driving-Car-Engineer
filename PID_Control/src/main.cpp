@@ -55,7 +55,6 @@ int main() {
     pid.Init(p[0],p[1],p[2]);
   }else {
     pid.Init(0.06, 0.00031, 1.29);
-    //pid.Init(0.05, 0.0001, 1.5);
   }
   h.onMessage([&pid, &p, &dp, &n, &max_n, &tol, &error, &best_error, &p_iterator, &total_iterator, &total_cte, &first, &sub_move, &second, &twiddle, &best_p](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length, uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -137,7 +136,7 @@ int main() {
                 
               }
               if(sub_move > 0) {
-                p_iterator = p_iterator+1;
+                p_iterator += 1;
                 first = true;
                 second = true;
                 sub_move = 0;
@@ -147,9 +146,9 @@ int main() {
               }
               total_cte = 0.0;
               n = 0;
-              total_iterator = total_iterator+1;
+              total_iterator += 1;
 
-              double sumdp = dp[0]+dp[1]+dp[2];
+              double sumdp = dp[0] + dp[1] + dp[2];
               if(sumdp < tol) {
                 std::cout << "Best p[0] p[1] p[2]: " << best_p[0] << best_p[1] << best_p[2] << " ";
               } else {

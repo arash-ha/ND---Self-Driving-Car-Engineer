@@ -4,8 +4,8 @@ Self-Driving Car Engineer Nanodegree Program
 ---
 
 In this project, the main goal is to implement PID control for the car in order to control steering and throttle. Two parameters are given to us through the simulator provided by Udacity:
-Cross-track error: how far the car is from the circuit
-Orientation error: the angle between the car’s orientation and the tangent to the path
+* Cross-track error: how far the car is from the circuit
+* Orientation error: the angle between the car’s orientation and the tangent to the path
 
 ## PID Control
 The proportional gain causes the car to steer with respect to the car’s distance from the lane center. For instance, if the car is so close to the right it steers to the left side, and in case of close to the left, it steers to the right side. By applying only P control, it was seen that the vehicle behavior was not stable and it was oscillating during the maneuver.

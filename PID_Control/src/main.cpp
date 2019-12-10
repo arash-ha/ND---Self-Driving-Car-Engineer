@@ -83,7 +83,7 @@ int main()
             steer_value = pid.TotalError();
             
             // DEBUG
-            std::cout << "CTE: " << cte << " Steering Value: " << steer_value << " Throttle Value: " << throttle_value << " Count: " << n << std::endl;
+            //std::cout << "CTE: " << cte << " Steering Value: " << steer_value << " Throttle Value: " << throttle_value << " Count: " << n << std::endl;
             n = n+1;
             if (n > max_n){ 
               
@@ -91,7 +91,7 @@ int main()
               //double sump = p[0]+p[1]+p[2];
               //std::cout << "sump: " << sump << " ";
               if(first == true) {
-                std::cout << "Intermediate p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
+                //std::cout << "Intermediate p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
                 p[p_iterator] += dp[p_iterator];
                 //pid.Init(p[0], p[1], p[2]);
                 first = false;
@@ -105,23 +105,23 @@ int main()
                     best_p[2] = p[2];
                     dp[p_iterator] *= 1.1;
                     sub_move += 1;
-                    std::cout << "iteration: " << total_iterator << " ";
-                    std::cout << "p_iterator: " << p_iterator << " ";
-                    std::cout << "p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
-                    std::cout << "error: " << error << " ";
-                    std::cout << "best_error: " << best_error << " ";
-                    std::cout << "Best p[0] p[1] p[2]: " << best_p[0] << " " << best_p[1] << " " << best_p[2] << " ";
+                    //std::cout << "iteration: " << total_iterator << " ";
+                    //std::cout << "p_iterator: " << p_iterator << " ";
+                    //std::cout << "p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
+                    //std::cout << "error: " << error << " ";
+                    //std::cout << "best_error: " << best_error << " ";
+                    //std::cout << "Best p[0] p[1] p[2]: " << best_p[0] << " " << best_p[1] << " " << best_p[2] << " ";
                 }else{
                   //std::cout << "else: ";
                   if(second == true) {
-                    std::cout << "Intermediate p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
+                    //std::cout << "Intermediate p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
                     p[p_iterator] -= 2 * dp[p_iterator];
                     //pid.Init(p[0], p[1], p[2]);
                     second = false;
                   }else {
-                    std::cout << "iteration: " << total_iterator << " ";
-                    std::cout << "p_iterator: " << p_iterator << " ";
-                    std::cout << "p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
+                    //std::cout << "iteration: " << total_iterator << " ";
+                    //std::cout << "p_iterator: " << p_iterator << " ";
+                    //std::cout << "p[0] p[1] p[2]: " << p[0] << " " << p[1] << " " << p[2] << " ";
                     if(error < best_error) {
                         best_error = error;
                         best_p[0] = p[0];
@@ -134,9 +134,9 @@ int main()
                         dp[p_iterator] *= 0.9;
                         sub_move += 1;
                     }
-                    std::cout << "error: " << error << " ";
-                    std::cout << "best_error: " << best_error << " ";
-                    std::cout << "Best p[0] p[1] p[2]: " << best_p[0] << " " << best_p[1] << " " << best_p[2] << " ";
+                    //std::cout << "error: " << error << " ";
+                    //std::cout << "best_error: " << best_error << " ";
+                    //std::cout << "Best p[0] p[1] p[2]: " << best_p[0] << " " << best_p[1] << " " << best_p[2] << " ";
                   }
                 }
                 
@@ -159,7 +159,7 @@ int main()
               double sumdp = dp[0]+dp[1]+dp[2];
               if(sumdp < tol) {
 
-                std::cout << "Best p[0] p[1] p[2]: " << best_p[0] << best_p[1] << best_p[2] << " ";
+                //std::cout << "Best p[0] p[1] p[2]: " << best_p[0] << best_p[1] << best_p[2] << " ";
 
               } else {
                 std::string reset_msg = "42[\"reset\",{}]";
@@ -178,11 +178,11 @@ int main()
             steer_value = pid.TotalError();
         
             // DEBUG
-            std::cout << "CTE: " << cte << " Steering Value: " << steer_value << " Throttle Value: " << throttle_value << " Count: " << n << std::endl;
+            //std::cout << "CTE: " << cte << " Steering Value: " << steer_value << " Throttle Value: " << throttle_value << " Count: " << n << std::endl;
             msgJson["steering_angle"] = steer_value;
             msgJson["throttle"] = throttle_value;
             auto msg = "42[\"steer\"," + msgJson.dump() + "]";
-            std::cout << msg << std::endl;
+            //std::cout << msg << std::endl;
             ws.send(msg.data(), msg.length(), uWS::OpCode::TEXT);
           } //twiddle else
         }//telemtery

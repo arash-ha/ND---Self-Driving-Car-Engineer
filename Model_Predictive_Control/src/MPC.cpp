@@ -5,6 +5,10 @@
 #include <string>
 #include <vector>
 #include "Eigen-3.3/Eigen/Core"
+#define HAVE_CSTDDEF
+#include <IpTNLP.hpp>
+#undef HAVE_CSTDDEF
+#undef HAVE_STDDEF_H
 
 using CppAD::AD;
 using Eigen::VectorXd;

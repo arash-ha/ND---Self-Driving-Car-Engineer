@@ -267,4 +267,7 @@ std::vector<double> MPC::Solve(const VectorXd &state, const VectorXd &coeffs) {
 =======
   return {};
 }
+<<<<<<< HEAD
+>>>>>>> 8ae5f128e5dd01c27205d9470021b5eee934f001
+=======
 >>>>>>> 8ae5f128e5dd01c27205d9470021b5eee934f001

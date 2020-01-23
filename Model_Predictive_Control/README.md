@@ -115,7 +115,7 @@ As it was discussed before, the simplifications we assumed under our Kinematic m
 
 The final result can be seen below: 
 
-![](./img/fast_lap.gif). 
+![gif](./img/fast_lap.gif). 
 
 The yellow line is the ground truth path coming from the GPS waypoints and the green line is the MPC designed path.
 
